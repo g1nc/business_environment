@@ -55,8 +55,8 @@ RSpec.describe UsersController, type: :controller do
     it 'return operations list' do
       put(:update, params: { id: user.id, amount: 100 })
       expect(JSON.parse(response.body)).to match(
-         'success' => true,
-         'balance' => 200
+        'success' => true,
+        'balance' => 200
       )
       user.reload
       expect(user.balance).to eq(200)

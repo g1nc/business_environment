@@ -12,7 +12,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'create operation' do
-      expect{ user.update_balance(100) }.to change(Operation, :count).by(1)
+      expect { user.update_balance(100) }.to change(Operation, :count).by(1)
     end
 
     it 'use transaction with lock' do
