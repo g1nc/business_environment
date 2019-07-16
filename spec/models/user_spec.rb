@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, balance: 0) }
 
   describe '#update_balance' do
     it 'update balance' do
@@ -15,16 +15,13 @@ RSpec.describe User, type: :model do
       expect{ user.update_balance(100) }.to change(Operation, :count).by(1)
     end
 
-    it 'use transaction' do
+    it 'use transaction with lock' do
       threads = []
-      5.times do
-        threads << Thread.new do
-          user.update_balance(10)
-        end
+      10.times do
+        threads << Thread.new { User.find(user.id).update_balance(10) }
       end
-      ActiveSupport::Dependencies.interlock.permit_concurrent_loads  do
-        threads.each(&:join)
-      end
+      ActiveSupport::Dependencies.interlock.permit_concurrent_loads { threads.each(&:join) }
+      user.reload
       expect(user.balance).to eq(100)
     end
   end

@@ -7,7 +7,6 @@ class UserOperationsPresenter
 
   def present
     {
-      success: true,
       operations: @user.operations.map do |operation|
         {
           name: @user.name,

@@ -2,16 +2,17 @@
 
 class UsersController < ApplicationController
   def index
-    render json: UsersListPresenter.new(User.all).present
+    render json: success_response(UsersListPresenter.new(User.all.order(id: :asc)).present)
   end
 
   def show
     @user = User.eager_load(:operations).find(params[:id])
-    render json: UserOperationsPresenter.new(@user).present
+    render json: success_response(UserOperationsPresenter.new(@user).present)
   end
 
   def update
-    User.find(params[:id]).update_balance(params[:amount].to_f)
-    render json: { success: true }
+    @user = User.find(params[:id])
+    @user.update_balance(params[:amount].to_f)
+    render json: success_response(balance: @user.balance)
   end
 end

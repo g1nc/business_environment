@@ -7,7 +7,6 @@ class UsersListPresenter
 
   def present
     {
-      success: true,
       users: @users.map do |user|
         {
           id: user.id,
